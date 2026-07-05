@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PulseShard DeFi Workspace</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0b1020;
+    color:#e5e7eb;
+}
+
+/* Two-zone interactive layout */
+.shell{
+    display:flex;
+    height:100vh;
+}
+
+/* Control column */
+.controls{
+    width:320px;
+    background:#111827;
+    padding:15px;
+    box-sizing:border-box;
+    border-right:1px solid #1f2937;
+}
+
+/* Visualization canvas */
+.canvas{
+    flex:1;
+    padding:15px;
+    overflow:auto;
+}
+
+/* Input fields */
+input,button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:6px;
+}
+
+/* Primary action button */
+button{
+    background:#8b5cf6;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#7c3aed;
+}
+
+/* NFT / DeFi entity blocks */
+.block{
+    margin-top:10px;
+    padding:10px;
+    background:#1f2937;
+    border-left:4px solid #8b5cf6;
+    border-radius:6px;
+}
+
+/* Log stream */
+.logline{
+    font-family:monospace;
+    font-size:13px;
+    margin-bottom:6px;
+    padding:6px;
+    background:#0f172a;
+    border-left:3px solid #38bdf8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="shell">
+
+<div class="controls">
+<h3>Asset Forge</h3>
+
+<input id="assetTitle" placeholder="Asset title">
+<input id="assetClass" placeholder="Class (NFT / DeFi / Token)">
+
+<button onclick="forgeAsset()">Forge Asset</button>
+<button onclick="processAssets()">Process Network</button>
+<button onclick="wipeSystem()">Wipe State</button>
+
+<div id="assetStream"></div>
+</div>
+
+<div class="canvas">
+<h3>Execution Stream</h3>
+<div id="logStream"></div>
+</div>
+
+</div>
+
+<script>
+
+/* Global simulation state */
+const systemState = {
+    registry: [],
+    history: [],
+    cycle: 0
+};
+
+/* Append log entry */
+function pushLog(msg){
+    systemState.history.push(msg);
+    renderLogs();
+}
+
+/* Create new digital asset */
+function forgeAsset(){
+
+    const title = document.getElementById("assetTitle").value.trim();
+    const cls = document.getElementById("assetClass").value.trim();
+
+    if(!title || !cls){
+        alert("Missing input");
+        return;
+    }
+
+    systemState.registry.push({
+        uid: systemState.registry.length + 1,
+        title: title,
+        cls: cls,
+        state: "raw"
+    });
+
+    pushLog("Asset forged: " + title);
+
+    document.getElementById("assetTitle").value = "";
+    document.getElementById("assetClass").value = "";
+
+    renderAssets();
+}
+
+/* Simulate decentralized processing cycle */
+function processAssets(){
+
+    systemState.registry.forEach(item => {
+
+        if(item.state === "raw"){
+            item.state = "verified";
+            systemState.cycle++;
+            pushLog("Processed asset #" + item.uid);
+        }
+
+    });
+
+    renderAssets();
+}
+
+/* Reset entire system */
+function wipeSystem(){
+
+    systemState.registry = [];
+    systemState.history = [];
+    systemState.cycle = 0;
+
+    pushLog("System reset complete");
+
+    renderAssets();
+}
+
+/* Render asset stream */
+function renderAssets(){
+
+    const stream = document.getElementById("assetStream");
+    stream.innerHTML = "";
+
+    systemState.registry.forEach(item => {
+
+        const box = document.createElement("div");
+        box.className = "block";
+
+        box.innerHTML =
+            "<strong>" + item.title + "</strong><br>" +
+            "Class: " + item.cls + "<br>" +
+            "State: " + item.state;
+
+        stream.appendChild(box);
+
+    });
+
+}
+
+/* Render logs */
+function renderLogs(){
+
+    const logStream = document.getElementById("logStream");
+    logStrea
