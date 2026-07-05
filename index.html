@@ -196,4 +196,24 @@ function renderAssets(){
 function renderLogs(){
 
     const logStream = document.getElementById("logStream");
-    logStrea
+    logStream.innerHTML = "";
+
+    systemState.history.forEach(entry => {
+
+        const div = document.createElement("div");
+        div.className = "logline";
+        div.textContent = entry;
+
+        logStream.appendChild(div);
+
+    });
+
+}
+
+/* Initial render */
+renderAssets();
+
+</script>
+
+</body>
+</html>
